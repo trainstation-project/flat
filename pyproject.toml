@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "flat"
+version = "0.1.0"
+description = "FLAT: Flash Linear Attention on TPUs. Pallas kernels for linear attention, Mamba-2, GLA and the depthwise causal convolution."
+requires-python = ">=3.12"
+authors = [
+    { name = "Mayank Mishra", email = "mayank31398@gmail.com" },
+]
+license = { file = "LICENSE" }
+dependencies = [
+    "equinox==0.13.8",
+    "jax[tpu]==0.11.0",
+    "jaxtyping==0.3.11",
+    "numpy==2.5.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["flat"]
+
+[tool.isort]
+profile = "black"
+line_length = 119
+lines_after_imports = 2
+
+[tool.black]
+line-length = 119
+target-version = ["py312"]

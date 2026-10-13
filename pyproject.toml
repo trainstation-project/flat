@@ -12,9 +12,7 @@ authors = [
 ]
 license = { file = "LICENSE" }
 dependencies = [
-    "equinox==0.13.8",
     "jax[tpu]==0.11.0",
-    "jaxtyping==0.3.11",
     "numpy==2.5.1",
 ]
 

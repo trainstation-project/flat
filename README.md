@@ -46,10 +46,6 @@ y, state = linear_attention_packed_jax(
 automatically: Pallas kernels on TPU, a plain JAX reference elsewhere. Pass
 `kernel_backend=KernelBackend.jax` to force the reference.
 
-`LinearAttentionJAX` and `DepthwiseCausalConvolutionJAX` are
-[Equinox](https://github.com/patrick-kidger/equinox) modules for a full layer
-(projections, convolution, forget gate, gated RMSNorm).
-
 ## Tests
 
 ```sh

@@ -14,7 +14,7 @@ jax = pytest.importorskip("jax")
 import jax.numpy as jnp
 
 from flat import KernelBackend
-from flat import LinearAttentionJAX, linear_attention_jax, linear_attention_packed_jax
+from flat import linear_attention_jax, linear_attention_packed_jax
 
 
 _ATTENTION_MULTIPLIER = 0.3
@@ -323,38 +323,3 @@ def test_linear_attention_pallas_chunked_grouped_head_guard() -> None:
     log_forget = jnp.zeros((B, S, 1), dtype=jnp.float32)
     with pytest.raises(ValueError, match="group size"):
         linear_attention_jax(q, q, q, log_forget=log_forget, kernel_backend=KernelBackend.pallas)
-
-
-@pytest.mark.parametrize("has_input_state", [False, True])
-def test_linear_attention_module_works(has_input_state: bool) -> None:
-    embed_size = 32
-    output_size = 24
-    B = 2
-    S = 16
-
-    key_init, key_input, key_state = jax.random.split(jax.random.PRNGKey(0), 3)
-
-    module = LinearAttentionJAX.init(
-        embed_size,
-        output_size,
-        key_head_dim=8,
-        value_head_dim=8,
-        num_query_heads=4,
-        num_key_heads=2,
-        num_value_heads=1,
-        add_bias=True,
-        key=key_init,
-    )
-
-    input = jax.random.normal(key_input, (B, S, embed_size))
-    input_state = (
-        jax.random.normal(key_state, (B, module.num_heads, module.key_head_dim, module.value_head_dim))
-        if has_input_state
-        else None
-    )
-
-    output, output_state, conv_state = module(input, input_state, kernel_backend=KernelBackend.jax)
-
-    assert output.shape == (B, S, output_size)
-    assert output_state.shape == (B, module.num_heads, module.key_head_dim, module.value_head_dim)
-    assert conv_state is None
